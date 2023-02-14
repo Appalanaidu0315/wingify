@@ -1,46 +1,69 @@
-package pageobject;
+package Apputils;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.CacheLookup;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-public class Loginpage {
+import Apputils.Apputils;
 
-	public WebDriver ldriver;
-	 public Loginpage(WebDriver rdriver)
-	 {
-		 ldriver=rdriver;
-		 PageFactory.initElements(rdriver, this);
-		 
-	 }
-	@FindBy(id="username")
-	@CacheLookup
-	 WebElement username;
+public class Loginpage extends Apputils
+{
 	
-	@FindBy(id="password")
-	@CacheLookup
-	 WebElement password;
-	
-	@FindBy(id="log-in")
-	@CacheLookup
-	 WebElement login;
-	
-	public void setUsername(String uname)
-	{
-		username.clear();
-		username.sendKeys(uname);
+
+	public void login(String uid,String pwd)
+	{		
+		driver.findElement(By.id("txtUsername")).sendKeys(uid);
+		driver.findElement(By.id("txtPassword")).sendKeys(pwd);
+		driver.findElement(By.id("btnLogin")).click();		
 	}
-	public void setPassword(String pword)
-	{
-		username.clear();
-		username.sendKeys(pword);
-	}
-	public void clicklogin()
+	
+	public boolean isAdminModuleDisplayed()
 	{
 		
-		username.click();
+		if(driver.findElement(By.linkText("Admin")).isDisplayed())
+		{
+			return true;
+		}else
+		{         
+			return false;
+		}
 	}
 	
-}
+	public void logout()
+	{
+		driver.findElement(By.partialLinkText("Welcome")).click();
+		driver.findElement(By.linkText("Logout")).click();
+	}
+	
+	public boolean isErrMsgDisplayed()
+	{
+		String errmsg = driver.findElement(By.id("spanMessage")).getText();
+		if(errmsg.toLowerCase().contains("invalid"))
+		{
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
+	public boolean isEmpModuleDisplayed()
+	{
+		
+		try 
+		{
+			driver.findElement(By.linkText("Admin")).isDisplayed();
+			return false;
+			
+		} catch (Exception e) 
+		{
+			return true;
+		}
+	
+	
+	}
+
+}	
+	
+	
+
+
